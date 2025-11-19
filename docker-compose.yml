@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+
+  db:
+    image: mysql:8.0
+    container_name: flask-chat-db
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpass
+      - MYSQL_USER=chatuser
+      - MYSQL_PASSWORD=chatpass
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+  web:
+    build: .
+    container_name: flask-chat-web
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=chat
+      - DB_USER=chatuser
+      - DB_PASSWORD=chatpass
+      - FLASK_ENV=development
+    depends_on:
+      - db
+
+
+volumes:
+  mysql_data:
