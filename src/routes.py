@@ -20,7 +20,9 @@ def register_routes(app):
     @app.route('/api/chat/<room>', methods=['POST'])
     def post_message(room):
         # Extract user input, add default values in case of not providing one.
-        username = request.form.get('username', 'Anonymous')
+        username = request.form.get('username')
+        if username == '':
+            username = 'Anonymous'
         msg = request.form.get('msg', '')
 
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -39,10 +41,4 @@ def register_routes(app):
     # Roman: This GET endpoint returns the chat log for the room
     @app.route("/api/chat/<room>", methods=["GET"])
     def get_chat(room: str):
-        demo_chat = (
-            "[2024-09-10 14:00:51] Roman Smirnov: Hello World! \n"
-            + f"[2024-09-10 14:01:12] Anton Nahhas: Hello room {room}!.\n"
-            + f"[2024-09-10 14:02:51] Roman Smirnov: Hello room {room}!\n"
-            + f"[2024-09-10 14:03:51] Anton Nahhas: Hello room {room}!\n"
-        )
-        return Response(demo_chat, mimetype="text/plain")
+        return Response('\n'.join(chat_rooms.get(room, '')), mimetype="text/plain")
