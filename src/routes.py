@@ -11,7 +11,8 @@ def register_routes(app):
         return app.send_static_file('index.html')
     
 
-    # Anton: The API is also a GET request by default, returns the static HTML for any room
+    # Anton: The API is also a GET request by default, returns the static HTML for any room 
+    # This API doesn't do anything with the room, it does the same as the endpoint above
     @app.route('/<room>')
     def room(room):
         return app.send_static_file('index.html')
@@ -20,10 +21,13 @@ def register_routes(app):
     @app.route('/api/chat/<room>', methods=['POST'])
     def post_message(room):
         # Extract user input, add default values in case of not providing one.
-        username = request.form.get('username')
-        if username == '':
+        username = request.form.get('username').strip()
+        if not username:
             username = 'Anonymous'
-        msg = request.form.get('msg', '')
+            
+        msg = request.form.get('msg', '').strip()
+        if not msg:
+            return '', 400
 
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
