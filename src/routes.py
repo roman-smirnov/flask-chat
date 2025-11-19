@@ -1,4 +1,4 @@
-from flask import current_app, request, Response
+from flask import request, Response
 from datetime import datetime
 
 
