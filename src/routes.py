@@ -3,8 +3,11 @@ from datetime import datetime
 
 
 def register_routes(app):
+
+
     chat_rooms = {} # Anton: In-memory storage for chat messages per room
     
+
     # Roman: This endpoint is a GET request by default, returns the static HTML
     @app.route('/')
     def index():
@@ -17,6 +20,7 @@ def register_routes(app):
     def room(room):
         return app.send_static_file('index.html')
     
+
     # Anton: POST request API, route: '/api/chat/<room>', Accepts a chat message  
     @app.route('/api/chat/<room>', methods=['POST'])
     def post_message(room):
@@ -24,7 +28,7 @@ def register_routes(app):
         username = request.form.get('username').strip()
         if not username:
             username = 'Anonymous'
-            
+
         msg = request.form.get('msg', '').strip()
         if not msg:
             return '', 400
@@ -41,6 +45,7 @@ def register_routes(app):
         chat_rooms[room].append(formatted_message)
 
         return '', 200
+
 
     # Roman: This GET endpoint returns the chat log for the room
     @app.route("/api/chat/<room>", methods=["GET"])
